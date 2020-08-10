@@ -4,4 +4,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="stop">Stop</string>
     <string name="start">Start</string>
+    <string name="talk">Talk</string>
+    <string name="go_to_talk">Go to talk</string>
 </resources>

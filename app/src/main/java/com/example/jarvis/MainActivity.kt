@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.jarvis.talk.TalkActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -24,9 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), PackageManager.PERMISSION_GRANTED)
-
         intentRecognizer.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         createRecognizerListener()
     }
@@ -112,6 +111,11 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    fun goToTalk(view: View) {
+        val intent = Intent(this, TalkActivity::class.java)
+        startActivity(intent)
     }
 
 }
