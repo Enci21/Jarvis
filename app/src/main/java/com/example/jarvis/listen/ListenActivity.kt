@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.jarvis.R
 import com.example.jarvis.talk.TalkActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class ListenActivity : AppCompatActivity() {
@@ -21,22 +20,27 @@ class ListenActivity : AppCompatActivity() {
     private val intentRecognizer: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
     private val speechRecognizer: SpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
     private val TAG = "---------LOG-----------"
+    var result: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_listen)
+
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), PackageManager.PERMISSION_GRANTED)
+
         intentRecognizer.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         createRecognizerListener()
     }
 
-    fun stopSpeech(v: View) {
-        speechRecognizer.stopListening()
-    }
-
     fun startSpeech(v: View) {
         speechRecognizer.startListening(intentRecognizer)
+    }
+
+    fun sendResultInput() {
+        val intent = Intent(this, TalkActivity::class.java)
+        intent.putExtra("RESULT", result)
+        startActivity(intent)
     }
 
     private fun createRecognizerListener() {
@@ -91,7 +95,6 @@ class ListenActivity : AppCompatActivity() {
                         TAG,
                         "End of speech "
                 )
-                Toast.makeText(this@ListenActivity, "Speech stopped!", Toast.LENGTH_SHORT).show()
             }
 
             override fun onError(error: Int) {
@@ -107,15 +110,12 @@ class ListenActivity : AppCompatActivity() {
                 var current = ""
                 if (matches != null) {
                     current = matches.get(0)
-                    textView.text = current
+                    result = current
+                    sendResultInput()
+
                 }
             }
 
         })
-    }
-
-    fun goToTalk(view: View) {
-        val intent = Intent(this, TalkActivity::class.java)
-        startActivity(intent)
     }
 }

@@ -5,5 +5,8 @@
     <string name="stop">Stop</string>
     <string name="start">Start</string>
     <string name="talk">Talk</string>
+    <string name="hi">Hi</string>
+    <string name="hello">Hello</string>
     <string name="go_to_talk">Go to talk</string>
+    <string name="go_to_listening">Go back to listening</string>
 </resources>

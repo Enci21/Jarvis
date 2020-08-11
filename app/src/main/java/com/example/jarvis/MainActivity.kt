@@ -8,14 +8,13 @@ import com.example.jarvis.listen.ListenActivity
 
 class MainActivity : AppCompatActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Handler().postDelayed({
             val intent = Intent(this, ListenActivity::class.java)
             startActivity(intent)
-        }, 2000)
+        }, 1500)
     }
 
 }
