@@ -32,7 +32,7 @@ class TalkActivity : AppCompatActivity() {
 
     fun speak(talk: String) {
         textToSpeech.speak(talk, TextToSpeech.QUEUE_FLUSH, null, null)
-    }
+}
 
     private fun createVoices(): Voice {
         for (voice in textToSpeech.voices) {
