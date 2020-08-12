@@ -1,52 +1,50 @@
 package com.example.jarvis.listen
 
+import android.app.Service
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.os.Binder
 import android.os.Bundle
+import android.os.IBinder
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import com.example.jarvis.R
-import com.example.jarvis.talk.TalkActivity
 import java.util.*
 
-class ListenActivity : AppCompatActivity() {
+class ListenService : Service() {
 
-    private val intentRecognizer: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-    private val speechRecognizer: SpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
     private val TAG = "---------LOG-----------"
-    var result: String = ""
+    private val intentRecognizer: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+    private val speechRecognizer: SpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this) ///ha nem jó BrainActivityből beinjectáljuk
+    private val listenBinder = ListenBinder()
 
+    class ListenBinder : Binder() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_listen)
+        val listenService = ListenService()
 
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), PackageManager.PERMISSION_GRANTED)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        //ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), PackageManager.PERMISSION_GRANTED)//activitybe áttenni
 
         intentRecognizer.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         createRecognizerListener()
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return listenBinder
     }
 
     fun startSpeech(v: View) {
         speechRecognizer.startListening(intentRecognizer)
     }
 
-    fun sendResultInput() {
-        val intent = Intent(this, TalkActivity::class.java)
-        intent.putExtra("RESULT", result)
-        startActivity(intent)
-    }
-
     private fun createRecognizerListener() {
         speechRecognizer.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
-                Toast.makeText(this@ListenActivity, "Talk to me", Toast.LENGTH_SHORT).show()
             }
 
             override fun onRmsChanged(rmsdB: Float) {
@@ -102,7 +100,7 @@ class ListenActivity : AppCompatActivity() {
                         TAG,
                         error.toString()
                 )
-                Toast.makeText(this@ListenActivity, "Something went wrong", Toast.LENGTH_SHORT).show()
+                sayError()
             }
 
             override fun onResults(results: Bundle?) {
@@ -110,12 +108,13 @@ class ListenActivity : AppCompatActivity() {
                 var current = ""
                 if (matches != null) {
                     current = matches.get(0)
-                    result = current
-                    sendResultInput()
-
+                    //do something with the result = current
                 }
             }
-
         })
+    }
+
+    fun sayError(): Boolean {
+        return true
     }
 }
