@@ -5,12 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.speech.tts.Voice
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.jarvis.R
-import com.example.jarvis.listen.ListenActivity
 import kotlinx.android.synthetic.main.activity_talk.*
 
 class TalkActivity : AppCompatActivity() {
@@ -75,8 +73,4 @@ class TalkActivity : AppCompatActivity() {
         unbindService(viewModel.serviceConnection)
     }
 
-    fun goToListen(view: View) {
-        val intent = Intent(this, ListenActivity::class.java)
-        startActivity(intent)
-    }
 }
