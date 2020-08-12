@@ -34,7 +34,7 @@ class BrainActivity : AppCompatActivity() {
         viewModel.answer.observe(this, answerObserver)
     }
 
-    fun startListen(view: View) {
+    fun listen(view: View) {
         viewModel.userVoiceInput.value = viewModel.startListen()
     }
 
