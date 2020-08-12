@@ -11,8 +11,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.example.jarvis.R
-import com.example.jarvis.talk.TalkActivity
 import java.util.*
 
 class ListenActivity : AppCompatActivity() {
@@ -25,7 +23,7 @@ class ListenActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_listen)
+        //setContentView(R.layout.activity_listen)
 
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), PackageManager.PERMISSION_GRANTED)
 
@@ -37,11 +35,11 @@ class ListenActivity : AppCompatActivity() {
         speechRecognizer.startListening(intentRecognizer)
     }
 
-    fun sendResultInput() {
+    /*fun sendResultInput() {
         val intent = Intent(this, TalkActivity::class.java)
         intent.putExtra("RESULT", result)
         startActivity(intent)
-    }
+    }*/
 
     private fun createRecognizerListener() {
         speechRecognizer.setRecognitionListener(object : RecognitionListener {
@@ -111,7 +109,7 @@ class ListenActivity : AppCompatActivity() {
                 if (matches != null) {
                     current = matches.get(0)
                     result = current
-                    sendResultInput()
+                    //sendResultInput()
 
                 }
             }
