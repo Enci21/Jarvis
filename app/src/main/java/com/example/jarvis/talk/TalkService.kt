@@ -32,6 +32,10 @@ class TalkService : Service() {
 
             INTRODUCE_YOURSELF -> return IM_JARVIS
 
+            SAY_HELLO -> return HELLO
+
+            LOVE_YOU -> return LOVE_YOU_MORE
+
         }
         return SORRY_I_CANT_UNDERSTAND
     }
