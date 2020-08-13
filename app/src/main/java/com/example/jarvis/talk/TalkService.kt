@@ -36,6 +36,8 @@ class TalkService : Service() {
 
             LOVE_YOU -> return LOVE_YOU_MORE
 
+            SHOW_DAD -> return OK
+
         }
         return SORRY_I_CANT_UNDERSTAND
     }

@@ -12,9 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.jarvis.LOVE_YOU
 import com.example.jarvis.R
+import com.example.jarvis.SHOW_DAD
 import com.example.jarvis.listen.ListenService
 import com.example.jarvis.talk.TalkService
+import kotlinx.android.synthetic.main.activity_brain.*
 
 class BrainActivity : AppCompatActivity() {
 
@@ -46,6 +49,11 @@ class BrainActivity : AppCompatActivity() {
     }
 
     private fun answer(userInput: String) {
+        if (userInput == SHOW_DAD) {
+            imageView.setImageResource(R.drawable.tony)
+        } else if (userInput == LOVE_YOU) {
+            imageView.setImageResource(R.drawable.heart)
+        }
         speak(viewModel.talkService.findAnswer(userInput))
     }
 

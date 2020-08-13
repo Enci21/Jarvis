@@ -9,4 +9,7 @@
     <string name="hello">Hello</string>
     <string name="go_to_talk">Go to talk</string>
     <string name="go_to_listening">Go back to listening</string>
+    <string name="clipping">Clipping</string>
+    <string name="translated">translated text</string>
+    <string name="skewed">"Skewed and "</string>
 </resources>

@@ -39,7 +39,7 @@ class BrainViewModel : ViewModel() {
     }
 
     var userVoiceInput = MutableLiveData<String>()
-    var connectionBoolean = true
+    private var connectionBoolean = true
 
     fun startListen() {
         listenService.startSpeech()
