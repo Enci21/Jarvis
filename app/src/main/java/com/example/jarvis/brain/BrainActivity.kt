@@ -2,40 +2,51 @@ package com.example.jarvis.brain
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.Voice
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.jarvis.R
+import com.example.jarvis.listen.ListenService
 import com.example.jarvis.talk.TalkService
 
 class BrainActivity : AppCompatActivity() {
 
-    private val viewModel: BrainViewModel = ViewModelProvider(this).get(BrainViewModel::class.java)
+    private lateinit var viewModel: BrainViewModel
     private lateinit var textToSpeech: TextToSpeech
+    private lateinit var speechRecognizer: SpeechRecognizer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_brain)
-        textToSpeech = TextToSpeech(this, TextToSpeech.OnInitListener { textToSpeech.voice = createVoices(textToSpeech) }, "com.google.android.tts")
+
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), PackageManager.PERMISSION_GRANTED)
+        viewModel = ViewModelProvider(this).get(BrainViewModel::class.java)
+        viewModel.userVoiceInput.observe(this, Observer<String> { answer(it) })
+
+        viewModel.listenBinder.observe(this, Observer<ListenService.ListenBinder> { t ->
+            t.getService()
+        })
+
         viewModel.talkBinder.observe(this, Observer<TalkService.TalkBinder> { t ->
             t.getService()
         })
-        val answerObserver = Observer<String> { a ->
-            speak(a)
-        }
-        val userVoiceInputObserver = Observer<String> { userVoiceInput ->
-            viewModel.talkService.findAnswer(userVoiceInput)
-        }
-        viewModel.userVoiceInput.observe(this, userVoiceInputObserver)
-        viewModel.answer.observe(this, answerObserver)
+        textToSpeech = TextToSpeech(this, TextToSpeech.OnInitListener { textToSpeech.voice = createVoices(textToSpeech) }, "com.google.android.tts")
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
     }
 
     fun listen(view: View) {
-        viewModel.userVoiceInput.value = viewModel.startListen()
+        viewModel.startListen()
+    }
+
+    private fun answer(userInput: String) {
+        speak(viewModel.talkService.findAnswer(userInput))
     }
 
     private fun speak(talk: String) {
@@ -51,15 +62,12 @@ class BrainActivity : AppCompatActivity() {
         return textToSpeech.voice
     }
 
+
     override fun onResume() {
         super.onResume()
+        startListenService()
         startTalkService()
     }
-
-    /*override fun onStop() {
-        super.onStop()
-        unbindService(viewModel.serviceConnection)
-    }*/
 
     private fun startTalkService() {
         val intent = Intent(this, TalkService::class.java)
@@ -75,16 +83,13 @@ class BrainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         unbindService(viewModel.talkServiceConnection)
-    }
-
-    /*override fun onResume() {
-        super.onResume()
-        startListenService()
+        unbindService(viewModel.listenServiceConnection)
     }
 
     /*override fun onStop() {
         super.onStop()
         unbindService(viewModel.listenServiceConnection)
+        unbindService(viewModel.talkServiceConnection)
     }*/
 
     private fun startListenService() {
@@ -94,14 +99,8 @@ class BrainActivity : AppCompatActivity() {
     }
 
     private fun bindListenService() {
-        val intent = Intent(this, Listen::class.java)
+        val intent = Intent(this, ListenService::class.java)
         bindService(intent, viewModel.listenServiceConnection, Context.BIND_AUTO_CREATE)
     }
-
-    override fun onPause() {
-        super.onPause()
-        unbindService(viewModel.listenServiceConnection)
-    }*/
-
 
 }
