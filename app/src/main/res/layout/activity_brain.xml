@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".listen.ListenActivity">
-
+    tools:context=".brain.BrainActivity">
 
     <ImageButton
         android:id="@+id/micButton"
@@ -14,11 +13,10 @@
         android:layout_marginBottom="@dimen/margin_32"
         android:background="@drawable/button_shape_basic"
         android:contentDescription="@string/app_name"
-        android:onClick="startSpeech"
-        app:layout_constraintStart_toStartOf="parent"
+        android:onClick="listen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_mic" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,40 +9,42 @@ import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.util.Log
-import android.view.View
+import io.reactivex.subjects.BehaviorSubject
+import org.koin.android.ext.android.get
 import java.util.*
 
 class ListenService : Service() {
 
     private val TAG = "---------LOG-----------"
     private val intentRecognizer: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-    private val speechRecognizer: SpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this) ///ha nem jó BrainActivityből beinjectáljuk
     private val listenBinder = ListenBinder()
+    private val speechRecognizer = get<SpeechRecognizer>()
+    var subject: BehaviorSubject<String> = BehaviorSubject.create()
 
     class ListenBinder : Binder() {
 
-        val listenService = ListenService()
-
+        fun getService(): ListenService {
+            return ListenService()
+        }
     }
 
     override fun onCreate() {
         super.onCreate()
-
-        //ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), PackageManager.PERMISSION_GRANTED)//activitybe áttenni
-
         intentRecognizer.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        createRecognizerListener()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
         return listenBinder
     }
 
-    fun startSpeech(v: View) {
+    fun startSpeech() {
         speechRecognizer.startListening(intentRecognizer)
+        createRecognizerListener()
     }
 
-    private fun createRecognizerListener() {
+    //runnable?
+    //nem várja meg az eredméyt
+    fun createRecognizerListener() {
         speechRecognizer.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
             }
@@ -100,7 +102,6 @@ class ListenService : Service() {
                         TAG,
                         error.toString()
                 )
-                sayError()
             }
 
             override fun onResults(results: Bundle?) {
@@ -108,13 +109,12 @@ class ListenService : Service() {
                 var current = ""
                 if (matches != null) {
                     current = matches.get(0)
-                    //do something with the result = current
+                    Log.e(TAG, current)
+                    subject.onNext(current)
                 }
             }
         })
     }
 
-    fun sayError(): Boolean {
-        return true
-    }
 }
+
