@@ -42,9 +42,7 @@ class ListenService : Service() {
         createRecognizerListener()
     }
 
-    //runnable?
-    //nem várja meg az eredméyt
-    fun createRecognizerListener() {
+    private fun createRecognizerListener() {
         speechRecognizer.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
             }

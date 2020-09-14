@@ -4,4 +4,18 @@
     <dimen name="margin_32">32dp</dimen>
     <dimen name="text_18">18sp</dimen>
     <dimen name="width_150">150dp</dimen>
+
+    <dimen name="clipRectRight">90dp</dimen>
+    <dimen name="clipRectBottom">90dp</dimen>
+    <dimen name="clipRectTop">0dp</dimen>
+    <dimen name="clipRectLeft">0dp</dimen>
+
+    <dimen name="rectInset">8dp</dimen>
+    <dimen name="smallRectOffset">40dp</dimen>
+
+    <dimen name="circleRadius">30dp</dimen>
+    <dimen name="textOffset">20dp</dimen>
+    <dimen name="strokeWidth">4dp</dimen>
+
+    <dimen name="textSize">18sp</dimen>
 </resources>

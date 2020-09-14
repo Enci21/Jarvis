@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/117827221/Jarvis.iml" filepath="$PROJECT_DIR$/.idea/modules/117827221/Jarvis.iml" group="Jarvis" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Jarvis-app.iml" filepath="$PROJECT_DIR$/.idea/modules/Jarvis-app.iml" group="Jarvis/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/117827221/andruidizmus-Jarvis.iml" filepath="$PROJECT_DIR$/.idea/modules/117827221/andruidizmus-Jarvis.iml" group="Jarvis" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app.iml" group="Jarvis/app" />
     </modules>
   </component>
