@@ -70,19 +70,18 @@ class BrainActivity : AppCompatActivity() {
 
     private fun turnBluetooth(boolean: Boolean): String {
         val adapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        return if (boolean) {
-            if (!adapter.isEnabled) {
-                adapter.enable()
-                BLUETOOTH_TURN_ON
-            } else {
-                BLUETOOTH_ALREADY_ON
+        return when (boolean) {
+            true -> {
+                if (!adapter.isEnabled) {
+                    adapter.enable()
+                    BLUETOOTH_TURN_ON
+                } else BLUETOOTH_ALREADY_ON
             }
-        } else {
-            if (adapter.isEnabled) {
-                adapter.disable()
-                BLUETOOTH_TURN_OFF
-            } else {
-                BLUETOOTH_ALREADY_OFF
+            false -> {
+                if (adapter.isEnabled) {
+                    adapter.disable()
+                    BLUETOOTH_TURN_OFF
+                } else BLUETOOTH_ALREADY_OFF
             }
         }
     }
