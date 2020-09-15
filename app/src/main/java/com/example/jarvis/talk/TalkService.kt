@@ -25,21 +25,29 @@ class TalkService : Service() {
     }
 
     fun findAnswer(input: String): String {
-        when (input) {
-            HI -> return HELLO
+        return when (input) {
+            HI -> HELLO
 
-            HELLO -> return HI
+            HELLO -> HI
 
-            INTRODUCE_YOURSELF -> return IM_JARVIS
+            INTRODUCE_YOURSELF -> IM_JARVIS
 
-            SAY_HELLO -> return HELLO
+            SAY_HELLO -> HELLO
 
-            LOVE_YOU -> return LOVE_YOU_MORE
+            LOVE_YOU -> LOVE_YOU_MORE
 
-            SHOW_DAD -> return OK
+            BLUETOOTH_TURN_ON -> BLUETOOTH_ON
 
+            BLUETOOTH_TURN_OFF -> BLUETOOTH_OFF
+
+            BLUETOOTH_ALREADY_ON -> BLUETOOTH_ALREADY_ON
+
+            BLUETOOTH_ALREADY_OFF -> BLUETOOTH_ALREADY_OFF
+
+            SHOW_DAD -> OK
+
+            else -> SORRY_I_CANT_UNDERSTAND
         }
-        return SORRY_I_CANT_UNDERSTAND
     }
 
     class TalkBinder : Binder() {

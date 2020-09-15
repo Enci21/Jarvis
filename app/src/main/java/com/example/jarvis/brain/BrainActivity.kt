@@ -1,8 +1,11 @@
 package com.example.jarvis.brain
 
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Canvas
+import android.graphics.Picture
 import android.os.Bundle
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
@@ -12,9 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.jarvis.LOVE_YOU
-import com.example.jarvis.R
-import com.example.jarvis.SHOW_DAD
+import com.example.jarvis.*
 import com.example.jarvis.listen.ListenService
 import com.example.jarvis.talk.TalkService
 import kotlinx.android.synthetic.main.activity_brain.*
@@ -49,12 +50,41 @@ class BrainActivity : AppCompatActivity() {
     }
 
     private fun answer(userInput: String) {
-        if (userInput == SHOW_DAD) {
-            imageView.setImageResource(R.drawable.tony)
-        } else if (userInput == LOVE_YOU) {
-            imageView.setImageResource(R.drawable.heart)
+        var input = userInput
+
+        when (userInput) {
+            SHOW_DAD -> imageView.setImageResource(R.drawable.tony)
+            LOVE_YOU -> {
+                imageView.visibility = View.INVISIBLE
+            }
+            BLUETOOTH_TURN_ON -> input = turnBluetooth(true)
+            BLUETOOTH_TURN_OFF -> input = turnBluetooth(false)
         }
-        speak(viewModel.talkService.findAnswer(userInput))
+        speak(viewModel.talkService.findAnswer(input))
+    }
+
+    private fun draw(picture: Picture) {
+        val canvas = Canvas()
+        canvas.drawPicture(picture)
+    }
+
+    private fun turnBluetooth(boolean: Boolean): String {
+        val adapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        return if (boolean) {
+            if (!adapter.isEnabled) {
+                adapter.enable()
+                BLUETOOTH_TURN_ON
+            } else {
+                BLUETOOTH_ALREADY_ON
+            }
+        } else {
+            if (adapter.isEnabled) {
+                adapter.disable()
+                BLUETOOTH_TURN_OFF
+            } else {
+                BLUETOOTH_ALREADY_OFF
+            }
+        }
     }
 
     private fun speak(talk: String) {
