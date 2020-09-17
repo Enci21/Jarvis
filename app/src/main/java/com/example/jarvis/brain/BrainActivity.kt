@@ -67,13 +67,11 @@ class BrainActivity : AppCompatActivity() {
             BLUETOOTH_TURN_ON -> input = turnBluetooth(true)
             BLUETOOTH_TURN_OFF -> input = turnBluetooth(false)
         }
-
         speak(viewModel.talkService.findAnswer(input))
 
         when {
             userInput.contains(SEARCH_GOOGLE) -> goToChrome(userInput.split(SEARCH_GOOGLE, 0))
-            userInput.contains(SEARCH_YT) ->
-                goToYoutube(userInput.split(SEARCH_YT, 0))
+            userInput.contains(SEARCH_YT) -> goToYoutube(userInput.split(SEARCH_YT, 0))
         }
         speak(HERE_IS_WHAT_I_FOUND)
     }
