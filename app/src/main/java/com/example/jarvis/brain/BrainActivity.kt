@@ -79,11 +79,14 @@ class BrainActivity : AppCompatActivity() {
     }
 
     private fun goToChrome(search: List<String>) {
-        val searchWord = ""
-        search.forEach { "$it$searchWord " }
         val intent = Intent(Intent.ACTION_WEB_SEARCH)
-        intent.putExtra(SearchManager.QUERY, searchWord)
-        startActivity(intent)
+        intent.putExtra(SearchManager.QUERY, search[1])
+        val activities: List<ResolveInfo> = packageManager.queryIntentActivities(
+                intent,
+                PackageManager.MATCH_DEFAULT_ONLY
+        )
+        val isIntentSafe: Boolean = activities.isNotEmpty()
+        if (isIntentSafe) startActivity(intent)
 
     }
 
