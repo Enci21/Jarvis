@@ -1,6 +1,9 @@
 package com.example.jarvis
 
+import java.util.*
+
 const val PERMISSIONS_REQUEST_ALL_PERMISSIONS = 1
+val UUID: UUID = java.util.UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
 
 //user inputs
 const val HI = "hi"
@@ -11,12 +14,15 @@ const val SAY_HELLO = "Jarvis please say hello"
 const val SHOW_DAD = "show your dad"
 const val BLUETOOTH_TURN_ON = "turn on the Bluetooth"
 const val BLUETOOTH_TURN_OFF = "turn off the Bluetooth"
+val SEARCH_YT = Regex(pattern = """\b(\w*search on YouTube\w*)\b""")
+val SEARCH_GOOGLE = Regex(pattern = """\b(\w*search on Google\w*)\b""")
 
 
 //answers
 const val SORRY_I_CANT_UNDERSTAND = "Sorry, I can't understand"
 const val LOVE_YOU_MORE = "i love you more"
 const val OK = "ok"
+const val HERE_IS_WHAT_I_FOUND = "here is what i found"
 const val BLUETOOTH_ON = "OK, the bluetooth is on"
 const val BLUETOOTH_OFF = "OK, the bluetooth is off now"
 const val BLUETOOTH_ALREADY_OFF = "The Bluetooth is already off"
