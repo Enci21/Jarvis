@@ -70,10 +70,15 @@ class BrainActivity : AppCompatActivity() {
         speak(viewModel.talkService.findAnswer(input))
 
         when {
-            userInput.contains(SEARCH_GOOGLE) -> goToChrome(userInput.split(SEARCH_GOOGLE, 0))
-            userInput.contains(SEARCH_YT) -> goToYoutube(userInput.split(SEARCH_YT, 0))
+            userInput.contains(SEARCH_GOOGLE) -> {
+                goToChrome(userInput.split(SEARCH_GOOGLE, 0))
+                speak(HERE_IS_WHAT_I_FOUND)
+            }
+            userInput.contains(SEARCH_YT) -> {
+                goToYoutube(userInput.split(SEARCH_YT, 0))
+                speak(HERE_IS_WHAT_I_FOUND)
+            }
         }
-        speak(HERE_IS_WHAT_I_FOUND)
     }
 
     private fun goToChrome(search: List<String>) {
