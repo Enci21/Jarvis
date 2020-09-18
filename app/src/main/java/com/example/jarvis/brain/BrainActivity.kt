@@ -10,7 +10,9 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.Canvas
 import android.graphics.Picture
+import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.Voice
@@ -38,7 +40,11 @@ class BrainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_brain)
 
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), PackageManager.PERMISSION_GRANTED)
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(android.Manifest.permission.RECORD_AUDIO),
+            PackageManager.PERMISSION_GRANTED
+        )
         viewModel = ViewModelProvider(this).get(BrainViewModel::class.java)
         viewModel.userVoiceInput.observe(this, Observer<String> { answer(it) })
 
@@ -49,7 +55,11 @@ class BrainActivity : AppCompatActivity() {
         viewModel.talkBinder.observe(this, Observer<TalkService.TalkBinder> { t ->
             t.getService()
         })
-        textToSpeech = TextToSpeech(this, TextToSpeech.OnInitListener { textToSpeech.voice = createVoices(textToSpeech) }, "com.google.android.tts")
+        textToSpeech = TextToSpeech(
+            this,
+            TextToSpeech.OnInitListener { textToSpeech.voice = createVoices(textToSpeech) },
+            "com.google.android.tts"
+        )
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
         adapter = BluetoothAdapter.getDefaultAdapter()
     }
@@ -78,15 +88,54 @@ class BrainActivity : AppCompatActivity() {
                 goToYoutube(userInput.split(SEARCH_YT, 0))
                 speak(HERE_IS_WHAT_I_FOUND)
             }
+            userInput.contains(CALL) -> {
+                callSomeone(userInput.split(CALL, 0)[1])
+                speak(IM_CALLING)
+            }
         }
     }
+
+    private fun callSomeone(name: String) {
+        val searchName = name.split(" ")[1]
+        var number = ""
+        val cursor =
+            contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
+        if (cursor != null && cursor.count > 0) {
+            while (cursor.moveToNext()) {
+                val contactName =
+                    cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                if (contactName == searchName) {
+                    if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                        val pCursor = contentResolver.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.Contacts.DISPLAY_NAME + " = ?",
+                            arrayOf(searchName),
+                            null
+                        )
+                        if (pCursor != null && pCursor.count > 0) {
+                            while (pCursor.moveToNext()) {
+                                number =
+                                    pCursor.getString(pCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER)) //throws exception
+                            }
+                        }
+                        pCursor?.close()
+                    }
+                }
+            }
+        }
+        cursor?.close()
+        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:$number"))
+        startActivity(intent)
+    }
+
 
     private fun goToChrome(search: List<String>) {
         val intent = Intent(Intent.ACTION_WEB_SEARCH)
         intent.putExtra(SearchManager.QUERY, search[1])
         val activities: List<ResolveInfo> = packageManager.queryIntentActivities(
-                intent,
-                PackageManager.MATCH_DEFAULT_ONLY
+            intent,
+            PackageManager.MATCH_DEFAULT_ONLY
         )
         val isIntentSafe: Boolean = activities.isNotEmpty()
         if (isIntentSafe) startActivity(intent)
@@ -100,8 +149,8 @@ class BrainActivity : AppCompatActivity() {
         intent.putExtra(SearchManager.QUERY, search[1])
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         val activities: List<ResolveInfo> = packageManager.queryIntentActivities(
-                intent,
-                PackageManager.MATCH_DEFAULT_ONLY
+            intent,
+            PackageManager.MATCH_DEFAULT_ONLY
         )
         val isIntentSafe: Boolean = activities.isNotEmpty()
         if (isIntentSafe) startActivity(intent)
@@ -176,11 +225,11 @@ class BrainActivity : AppCompatActivity() {
         unbindService(viewModel.listenServiceConnection)
     }
 
-    /*override fun onStop() {
-        super.onStop()
-        unbindService(viewModel.listenServiceConnection)
-        unbindService(viewModel.talkServiceConnection)
-    }*/
+/*override fun onStop() {
+    super.onStop()
+    unbindService(viewModel.listenServiceConnection)
+    unbindService(viewModel.talkServiceConnection)
+}*/
 
     private fun startListenService() {
         val intent = Intent(this, ListenService::class.java)

@@ -16,12 +16,16 @@ const val BLUETOOTH_TURN_ON = "turn on the Bluetooth"
 const val BLUETOOTH_TURN_OFF = "turn off the Bluetooth"
 val SEARCH_YT = Regex(pattern = """\b(\w*search on YouTube\w*)\b""")
 val SEARCH_GOOGLE = Regex(pattern = """\b(\w*search on Google\w*)\b""")
+val CALL = Regex(pattern = """\b(\w*call\w*)\b""")
+val WRITE_A_MESSAGE = Regex(pattern = """\b(\w*please write a message to\w*)\b""")
 
 
 //answers
 const val SORRY_I_CANT_UNDERSTAND = "Sorry, I can't understand"
 const val LOVE_YOU_MORE = "i love you more"
 const val OK = "ok"
+const val IM_CALLING = "i'm calling"
+const val TELL_MESSAGE = "what is the message?"
 const val HERE_IS_WHAT_I_FOUND = "here is what i found"
 const val BLUETOOTH_ON = "OK, the bluetooth is on"
 const val BLUETOOTH_OFF = "OK, the bluetooth is off now"
