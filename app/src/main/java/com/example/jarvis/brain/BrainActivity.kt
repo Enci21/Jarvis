@@ -90,7 +90,7 @@ class BrainActivity : AppCompatActivity() {
             }
             userInput.contains(CALL) -> {
                 callSomeone(userInput.split(CALL, 0)[1])
-                speak(IM_CALLING)
+                speak(IM_CALLING + userInput.split(CALL, 0)[1])
             }
         }
     }
