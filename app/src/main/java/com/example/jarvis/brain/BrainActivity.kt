@@ -1,5 +1,7 @@
 package com.example.jarvis.brain
 
+import android.Manifest
+import android.animation.ValueAnimator
 import android.app.SearchManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -12,6 +14,7 @@ import android.graphics.Canvas
 import android.graphics.Picture
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.provider.ContactsContract
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
@@ -34,6 +37,7 @@ class BrainActivity : AppCompatActivity() {
     private lateinit var textToSpeech: TextToSpeech
     private lateinit var speechRecognizer: SpeechRecognizer
     private lateinit var adapter: BluetoothAdapter
+    private lateinit var valueAnimator: ValueAnimator
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +49,7 @@ class BrainActivity : AppCompatActivity() {
             arrayOf(android.Manifest.permission.RECORD_AUDIO),
             PackageManager.PERMISSION_GRANTED
         )
+        valueAnimator = ValueAnimator.ofFloat(0f, 100f).setDuration(2000)
         viewModel = ViewModelProvider(this).get(BrainViewModel::class.java)
         viewModel.userVoiceInput.observe(this, Observer<String> { answer(it) })
 
@@ -73,7 +78,14 @@ class BrainActivity : AppCompatActivity() {
 
         when (userInput) {
             SHOW_DAD -> imageView.setImageResource(R.drawable.tony)
-            LOVE_YOU -> imageView.visibility = View.INVISIBLE
+            LOVE_YOU -> {
+                Handler().postDelayed({
+                    imageView.visibility = View.VISIBLE
+                    animationView.visibility = View.GONE
+                }, 3500)
+                imageView.visibility = View.GONE
+                animationView.visibility = View.VISIBLE
+            }
             BLUETOOTH_TURN_ON -> input = turnBluetooth(true)
             BLUETOOTH_TURN_OFF -> input = turnBluetooth(false)
         }
@@ -126,6 +138,17 @@ class BrainActivity : AppCompatActivity() {
         }
         cursor?.close()
         val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:$number"))
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CALL_PHONE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CALL_PHONE),
+                PackageManager.PERMISSION_GRANTED
+            )
+        }
         startActivity(intent)
     }
 
@@ -178,15 +201,15 @@ class BrainActivity : AppCompatActivity() {
         }
     }
 
-    private fun connectToDeviceWithBluetooth(deviceName: String) {
-        val pairedDevices: Set<BluetoothDevice>? = adapter.bondedDevices
-        val name = deviceName.replace(" ", "")
-        pairedDevices?.forEach {
-            if (it.name.equals(name, ignoreCase = true)) {
-                ConnectThread(device = it).run()
-            } else Log.d("TAG", "nem jó")
-        }
-    }
+    /* private fun connectToDeviceWithBluetooth(deviceName: String) {
+         val pairedDevices: Set<BluetoothDevice>? = adapter.bondedDevices
+         val name = deviceName.replace(" ", "")
+         pairedDevices?.forEach {
+             if (it.name.equals(name, ignoreCase = true)) {
+                 ConnectThread(device = it).run()
+             } else Log.d("TAG", "nem jó")
+         }
+     }*/
 
     private fun speak(talk: String) {
         textToSpeech.speak(talk, TextToSpeech.QUEUE_FLUSH, null, null)

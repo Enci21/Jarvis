@@ -17,7 +17,7 @@ const val BLUETOOTH_TURN_OFF = "turn off the Bluetooth"
 val SEARCH_YT = Regex(pattern = """\b(\w*search on YouTube\w*)\b""")
 val SEARCH_GOOGLE = Regex(pattern = """\b(\w*search on Google\w*)\b""")
 val CALL = Regex(pattern = """\b(\w*call\w*)\b""")
-val WRITE_A_MESSAGE = Regex(pattern = """\b(\w*please write a message to\w*)\b""")
+val WRITE_A_MESSAGE = Regex(pattern = """\b(\w*write a message to\w*)\b""")
 
 
 //answers

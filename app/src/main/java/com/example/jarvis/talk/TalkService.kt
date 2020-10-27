@@ -12,7 +12,7 @@ class TalkService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-
+//ez nem kell
     }
 
     override fun onBind(intent: Intent?): IBinder? {
