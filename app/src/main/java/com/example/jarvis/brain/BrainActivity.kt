@@ -51,7 +51,10 @@ class BrainActivity : AppCompatActivity() {
         )
         valueAnimator = ValueAnimator.ofFloat(0f, 100f).setDuration(2000)
         viewModel = ViewModelProvider(this).get(BrainViewModel::class.java)
-        viewModel.userVoiceInput.observe(this, Observer<String> { answer(it) })
+        viewModel.userVoiceInput.observe(this, Observer<String> {
+            text.text = it.capitalize()
+            answer(it)
+        })
 
         viewModel.listenBinder.observe(this, Observer<ListenService.ListenBinder> { t ->
             t.getService()
@@ -77,7 +80,12 @@ class BrainActivity : AppCompatActivity() {
         var input = userInput
 
         when (userInput) {
-            SHOW_DAD -> imageView.setImageResource(R.drawable.tony)
+            SHOW_DAD -> {
+                Handler().postDelayed({
+                    imageView.setImageResource(R.drawable.jarvis)
+                }, 3000)
+                imageView.setImageResource(R.drawable.tony)
+            }
             LOVE_YOU -> {
                 Handler().postDelayed({
                     imageView.visibility = View.VISIBLE
