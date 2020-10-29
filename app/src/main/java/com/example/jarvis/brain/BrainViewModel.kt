@@ -50,4 +50,6 @@ class BrainViewModel : ViewModel() {
             connectionBoolean = false
         }
     }
+
+
 }
